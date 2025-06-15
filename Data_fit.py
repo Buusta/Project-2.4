@@ -11,8 +11,6 @@ _15Hz = np.array([8.58, 10.2, 8.93])
 COMSOL_y = [8.351, 6.416, 13.085, 15.999, 18.6, 23.391, 27.569]
 COMSOL_x = [1, 1.2, 1.4, 1.5, 1.6, 1.8, 2.0]
 
-
-
 # Berekeningen
 means = [
     0,
@@ -46,9 +44,9 @@ y_fit = quadratic(x_fit, *popt)
 
 # Plot
 plt.figure(figsize=(8, 5))
-plt.errorbar(x, y, yerr=y_err, fmt='o', capsize=5, label='Experimenteel', color='royalblue',zorder=5)
-plt.plot(x_fit, y_fit, color='darkorange',zorder=4)
-plt.scatter(COMSOL_x, COMSOL_y, label='COMSOL', color='green', zorder=3)
+plt.errorbar(x, y, yerr=y_err, fmt='o', capsize=4, markersize=4.5, elinewidth=1, label='Experimenteel', color='royalblue',zorder=5)
+plt.plot(x_fit, y_fit, color='darkorange', linestyle='--', zorder=4)
+plt.scatter(COMSOL_x, COMSOL_y, label='COMSOL', color='green', s=45/2, zorder=3)
 plt.xticks(x)
 plt.xlabel('Frequentie (Hz)')
 plt.ylabel('Verplaatsing (mm)')
