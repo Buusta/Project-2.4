@@ -6,9 +6,10 @@ import matplotlib.pyplot as plt
 
 # Selecteer meting
 Hz = 1.5
-measurement = 2
+measurement = 3
 
 filename = "Msts/" + str(Hz) + "Hz_" + str(measurement) + ".csv"
+# filename = "Msts/" + "calib_" + str(measurement) + ".csv"
 df = pd.read_csv(filename)
 
 # Modeldefinitie
@@ -23,21 +24,24 @@ def position_model(x, A, f, c):
 popt1, pcov1 = curve_fit(model, df['t'], df['a1'], p0=[1.7, Hz, 0])
 popt2, pcov2 = curve_fit(model, df['t'], df['a2'], p0=[1.9, Hz, 0])
 
+
 # Bereken fitted curves
 curve1 = model(df['t'], *popt1)
 curve2 = model(df['t'], *popt2)
 
 # Plot originele data en fits
 plt.figure(figsize=(10, 5))
-plt.scatter(df['t'], df['a1'], s=3, label='a1 (data)', alpha=0.5)
-plt.scatter(df['t'], df['a2'], s=3, label='a2 (data)', alpha=0.5)
-plt.plot(df['t'], curve1, color='blue', label='Fit a1')
-plt.plot(df['t'], curve2, color='red', label='Fit a2')
-plt.xlabel("Tijd (s)")
-plt.ylabel("Versnelling in (m/s^2)")
-plt.title("Versnelling vs tijd")
-plt.legend()
+plt.scatter(df['t'], df['a1'], s=3, label='Sensor gebouw (data)', alpha=0.5)
+plt.scatter(df['t'], df['a2'], s=3, label='Sensor plaat (data)', alpha=0.5)
+plt.plot(df['t'], curve1, color='blue', label='Fit sensor gebouw')
+plt.plot(df['t'], curve2, color='red', label='Fit sensor plaat')
+# plt.xlabel("Tijd $(s)$")
+plt.ylabel("Versnelling in $(m/s^2)$")
+plt.title("Versnelling, tijd")
+plt.legend(loc='lower left')
 plt.grid(True)
+plt.savefig("CsvReader\\Fit.png", dpi=600, bbox_inches='tight')
+
 
 # Print de parameters
 # print("a1 fit parameters:", popt1)
@@ -53,15 +57,16 @@ max2 = np.max(pos2)
 verschil = max2 - max1
 
 
-# Plot afstand
-plt.figure(figsize=(10, 5))
-plt.plot(df['t'], pos1, label='Positie a1', color='blue')
-plt.plot(df['t'], pos2, label='Positie a2', color='red')
-plt.xlabel("Tijd (s)")
-plt.ylabel("Afstand (m)")
-plt.title("Afstand vs tijd")
-plt.legend()
-plt.grid(True)
+# # Plot afstand
+# plt.figure(figsize=(10, 5))
+# plt.plot(df['t'], pos1, label='Positie a1', color='blue')
+# plt.plot(df['t'], pos2, label='Positie a2', color='red')
+# plt.xlabel("Tijd (s)")
+# plt.ylabel("Afstand (m)")
+# plt.title("Afstand vs tijd")
+# plt.legend()
+# # plt.savefig("Displacement.png", dpi=600)
+# plt.grid(True)
 
 # # Voeg tekst toe linksonder in de grafiek
 # plt.text(

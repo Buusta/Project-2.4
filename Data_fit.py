@@ -13,49 +13,53 @@ COMSOL_x = [1, 1.2, 1.4, 1.5, 1.6, 1.8, 2.0]
 
 # Berekeningen
 means = [
-    0,
+    
     np.mean(_1Hz),
     np.mean(_12Hz),
     np.mean(_14Hz),
     np.mean(_15Hz)
 ]
 stds = [
-    0.13,  # handmatig gegeven
+      # handmatig gegeven
     np.std(_1Hz, ddof=1),
     np.std(_12Hz, ddof=1),
     np.std(_14Hz, ddof=1),
     np.std(_15Hz, ddof=1)
 ]
 
-x = np.array([0, 1.0, 1.2, 1.4, 1.5])
+x = np.array([1.0, 1.2, 1.4, 1.5])
 y = np.array(means)
 y_err = np.array(stds)
 
 # Kwadratische functie
-def quadratic(f, a, b, c):
-    return a * f**2 + b * f + c
+def quadratic(f, a, b):
+    return a * f**2 + b * f
 
 # Curve fit met standaarddeviaties als gewichten
-popt, pcov = curve_fit(quadratic, x, y, sigma=y_err, absolute_sigma=True)
+popt, pcov = curve_fit(quadratic, x, y)
 
 # Genereer gladde curve voor plot
 x_fit = np.linspace(0, max(COMSOL_x), 200)
 y_fit = quadratic(x_fit, *popt)
+
+xticks = [0]
+xticks += list(x)
+
+COMSOL_x_ticks = [0] + list(COMSOL_x)
 
 # Plot
 plt.figure(figsize=(8, 5))
 plt.errorbar(x, y, yerr=y_err, fmt='o', capsize=4, markersize=4.5, elinewidth=1, label='Experimenteel', color='royalblue',zorder=5)
 plt.plot(x_fit, y_fit, color='darkorange', linestyle='--', zorder=4)
 plt.scatter(COMSOL_x, COMSOL_y, label='COMSOL', color='green', s=45/2, zorder=3)
-plt.xticks(x)
+plt.xticks(COMSOL_x_ticks)
 plt.xlabel('Frequentie (Hz)')
 plt.ylabel('Verplaatsing (mm)')
-#plt.title('Gebouwverplaatsing bij verschillende frequenties')
-plt.legend()
+plt.title('Gebouwverplaatsing bij verschillende frequenties')
+plt.legend(loc='upper left')
 plt.grid(True)
+plt.ylim(top=max(COMSOL_y) + max(COMSOL_y) * 0.05,
+         bottom = 0 - max(COMSOL_y) * 0.05)
 plt.tight_layout()
-plt.savefig("Uitwijkingen.png", dpi=600)
+plt.savefig("DataFit\\Uitwijkingen.png", dpi=600, bbox_inches='tight')
 plt.show()
-
-# Print fit parameters (optioneel)
-print(f"Fit parameters: a = {popt[0]:.4f}, b = {popt[1]:.4f}, c = {popt[2]:.4f}")
